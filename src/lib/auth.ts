@@ -45,7 +45,9 @@ export const auth = betterAuth({
     autoSignIn: false,
     requireEmailVerification: true,
   },
-  emailVerification: {
+  emailVerification: {  
+
+    sendOnSignUp:true,
     sendVerificationEmail: async ( { user, url, token }, request) => {
      try {
  const info = await transporter.sendMail({
