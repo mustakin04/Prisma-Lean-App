@@ -1,6 +1,6 @@
 import express, { type NextFunction, type Request, type Response } from "express";
 import {auth as butterauth} from "../../src/lib/auth"
-export enum UserPole{
+export enum UserRole{
     USER="USER",
     ADMIN="ADMIN"
 }
@@ -11,7 +11,7 @@ declare global{
                 id:string;
                 email:string;
                 name:string;
-                role:UserPole;
+                role:UserRole;
                 emailVerified:boolean
             }
         }
@@ -38,7 +38,7 @@ const auth=(...roles:any)=>{
                 messsage: "yor are not verify "
             })
         }
-        if(roles.length && !roles.includes(session.user.role as UserPole)){
+        if(roles.length && !roles.includes(session.user.role as UserRole)){
             return res.status(403).json({
                     success: false,
                     message: "Forbidden! You don't have permission to access this resources!"
@@ -48,7 +48,7 @@ const auth=(...roles:any)=>{
             id:session.user.id,
             email:session.user.email,
             name:session.user.name,
-            role:session.user.role as UserPole, 
+            role:session.user.role as UserRole, 
             emailVerified:session.user.emailVerified
         }
         next()
