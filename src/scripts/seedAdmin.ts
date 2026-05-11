@@ -40,7 +40,7 @@ const seedAdmin = async () => {
   try {
     const adminData = {
       name: "Admin1",
-      email: "admin1@gmail.com",
+      email: "admin2@gmail.com",
       password: "admin@123",
       role: UserRole.ADMIN,
     };
@@ -66,7 +66,9 @@ const seedAdmin = async () => {
     if (result.user?.id) {
       await prisma.user.update({
         where: { id: result.user.id },
-        data: { role: UserRole.ADMIN },
+        data: { role: UserRole.ADMIN ,
+                emailVerified:true,  
+              },
       });
       console.log("✅ Admin seeded successfully!");
     } else {

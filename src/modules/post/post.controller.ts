@@ -1,41 +1,61 @@
 import type { Request, Response } from "express";
 import { createService } from "./post.service";
+import paginationSortingHeplers from "../../helpers/paginationSortingHeplers";
 
-
-const createPost =async(req:Request,res:Response)=>{
+const createPost = async (req: Request, res: Response) => {
   //      console.log(req.user,"jarin")
   // console.log(req.body)
-    
-  try{
-    const user=req.user
-    if(!user){
+
+  try {
+    const user = req.user;
+    if (!user) {
       return res.status(400).json({
-        message:"user not found"
-      })
+        message: "user not found",
+      });
     }
-    const result= await createService.createPost(req.body , user.id)
+    const result = await createService.createPost(req.body, user.id);
     return res.status(201).json({
-      message:"success",
-      data:result
-    })
-  }catch(error){
-    res.json(error)
+      message: "success",
+      data: result,
+    });
+  } catch (error) {
+    res.json(error);
   }
-}
+};
 
 const getAllpost = async (req: Request, res: Response) => {
   try {
+   
     const { search } = req.query;
-    const {featured}=req.query
-    const authorId =req.query.auther
-    const autherIding= typeof authorId=="string"? authorId:undefined
-    const isFeatured=typeof featured==="string" ? featured==='true'? true:featured==="false"?false:undefined: undefined
-    const tags=req.query.tag ?(req.query.tag as string).split(',') :undefined
-    const searching =
-      typeof search === "string" ? search.trim() : undefined;
-     console.log(searching)
+    const { featured } = req.query;
+    const authorId = req.query.auther;
+    const autherIding = typeof authorId == "string" ? authorId : undefined;
+    const isFeatured =
+      typeof featured === "string"
+        ? featured === "true"
+          ? true
+          : featured === "false"
+            ? false
+            : undefined
+        : undefined;
+    const tags = req.query.tag
+      ? (req.query.tag as string).split(",")
+      : undefined;
+    const searching = typeof search === "string" ? search.trim() : undefined;
+    console.log(searching);
+ 
+     const {page,limit,skip,sortby,sortOrder} =paginationSortingHeplers(req.query)
+
     const data = await createService.getAllPost({
-      search: searching ,tags, isFeatured,authorId:autherIding
+      search: searching,
+      tags,
+      isFeatured,
+      authorId: autherIding,
+      page,
+      limit,
+      skip,
+      sortby,
+      sortOrder
     });
     return res.status(200).json({
       message: "success",
@@ -49,4 +69,4 @@ const getAllpost = async (req: Request, res: Response) => {
   }
 };
 
-export const PostController={createPost,getAllpost}   
+export const PostController = { createPost, getAllpost };  
