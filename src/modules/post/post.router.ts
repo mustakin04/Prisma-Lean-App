@@ -6,5 +6,6 @@ import auth, { UserRole } from "../../middlewares/auth"
 const router =express.Router()
 router.get("/getData",PostController.getAllpost)
 router.post("/", auth(UserRole.USER) ,PostController.createPost)
+router.get("/:postId",PostController.getSingleData)
 export default router  
 

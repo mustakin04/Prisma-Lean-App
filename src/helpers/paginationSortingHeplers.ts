@@ -11,17 +11,15 @@ type IOptionsResuts={
     sortby:string,
     sortOrder:string
 }
-
 const paginationSortingHeplers=(options:IOptions):IOptionsResuts=>{
          const page=Number(options.page)||1;
-         const limit=Number(options.page)||10
+         const limit=Number(options.limit)||10
          const skip=(page-1)*limit
-         const  sortby= options.sortby || "createAT";
+         const  sortby= options.sortby || "createdAt";
          const  sortOrder=options.sortOrder || "asc"
 
          return {
             page,limit,skip,sortby,sortOrder
          }
 }
-
 export default paginationSortingHeplers;

@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { createService } from "./post.service";
 import paginationSortingHeplers from "../../helpers/paginationSortingHeplers";
 
+
 const createPost = async (req: Request, res: Response) => {
   //      console.log(req.user,"jarin")
   // console.log(req.body)
@@ -67,6 +68,26 @@ const getAllpost = async (req: Request, res: Response) => {
       error,
     });
   }
-};
+}; 
+const getSingleData=async(req:Request,res:Response)=>{
+        try{
+          const {postId}=req.params
+        const postIds=typeof postId ==="string" ? postId:undefined
+        if(!postIds){
+          throw new Error("id not required")
+        }
+        const getID= await createService.getSingleData({postId:postIds})
+          res.status(200).json({
+            message:"sucess",
+            data:getID
+          })
+        }catch(e){
+          console.log("getsingledata errror",e)
+          res.status(400).json({
+            message:"errror getsingeData",
+            error:e
+        })
+        }
+}
 
-export const PostController = { createPost, getAllpost };  
+export const PostController = { createPost, getAllpost ,getSingleData };  
