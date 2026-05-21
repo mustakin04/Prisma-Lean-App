@@ -1,4 +1,4 @@
-import type { Post } from "../../../generated/prisma/client";
+import { CommentStatus, type Post } from "../../../generated/prisma/client";
 import type { PostWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
 
@@ -112,6 +112,24 @@ const getSingleData = async (payload: { postId: string }) => {
       where: {
         id: payload.postId,
       },
+      include:{
+             comments:{
+              where:{
+                parentId: null,
+                status : CommentStatus.APPROVED
+              },
+              include:{
+                replies:{
+                  where:{ 
+                    status:CommentStatus.APPROVED
+                  },
+                  include:{
+                    replies:true
+                  }
+                }
+              }
+             }
+      }
     });
     return esixtinid;
   });

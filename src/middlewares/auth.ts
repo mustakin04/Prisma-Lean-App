@@ -20,12 +20,12 @@ declare global{
 
 const auth=(...roles:any)=>{
     return async (req:Request,res:Response,next:NextFunction)=>{
-        console.log("ok coll")
+        // console.log("ok coll")
         const session= await butterauth.api.getSession({
             headers:req.headers as any
         })
 
-        console.log(session,"middleware")
+        // console.log(session,"middleware")
         if(!session){
             return res.status(401).json({
                 success:false,
