@@ -23,6 +23,20 @@ const createComment=async(req:Request,res:Response)=>{
 
 }
 
+const getComment=async(req:Request,res:Response)=>{
+       const {id}=req.params
+       try{
+        const data= await CommentService.getcomment(id as string)
+        res.status(200).json({
+            message:"sucess",
+            data:data
+        })
+       }catch(e){
+        console.log(e,"getcomment")
+        message: e
+       }
+}    
 
 
-export const CommentController={createComment}
+
+export const CommentController={createComment,getComment}

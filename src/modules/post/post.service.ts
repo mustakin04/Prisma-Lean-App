@@ -15,7 +15,7 @@ const createPost = async (
   return result;
 };
 
-const getAllPost = async ({
+const getAllPost = async ({ 
   search,
   tags,
   isFeatured,
@@ -84,6 +84,11 @@ const getAllPost = async ({
       AND: andCondition,
     },
     orderBy: { [sortby]: sortOrder },
+    include:{
+      _count:{
+        select:{comments:true}
+      }
+    }
   });
   const totaldata = await prisma.post.count();
   return {

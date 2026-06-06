@@ -4,6 +4,6 @@ import auth, { UserRole } from "../../middlewares/auth"
 const router=express.Router()
 
 
-router.post("/",auth(UserRole.USER,UserRole.ADMIN) ,CommentController.createComment
-)
+router.post("/",auth(UserRole.USER,UserRole.ADMIN) ,CommentController.createComment)
+router.get("/getcomment/:id",CommentController.getComment)
  export   const  commetRouter:Router=router

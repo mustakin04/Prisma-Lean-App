@@ -53,7 +53,7 @@ const getAllpost = async (req: Request, res: Response) => {
       isFeatured,
       authorId: autherIding,
       page,
-      limit,
+      limit, 
       skip,
       sortby,
       sortOrder
