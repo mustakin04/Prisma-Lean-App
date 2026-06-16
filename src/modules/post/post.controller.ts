@@ -90,4 +90,4 @@ const getSingleData=async(req:Request,res:Response)=>{
         }
 }
 
-export const PostController = { createPost, getAllpost ,getSingleData };  
+export const PostController = { createPost, getAllpost ,getSingleData };   

@@ -1,3 +1,4 @@
+import { error } from "node:console";
 import type { CommentStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 
@@ -72,6 +73,9 @@ const modaretComment= async( commentId:string , data:{ status:CommentStatus})=>{
           id:commentId
         }
        })
+       if(commentData.status===data.status){
+         throw new Error(`your provite status("${data.status} alredy up to date`)
+       }
        return await prisma.comment.update({
         where:{
           id: commentId

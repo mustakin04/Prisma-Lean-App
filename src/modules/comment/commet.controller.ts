@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { CommentService } from "./commet.service";
+import { error } from "node:console";
 
 
 
@@ -56,11 +57,20 @@ const deleteComment=async(req:Request,res:Response)=>{
 }
 const modaretComment =async(req:Request,res:Response)=>{
         const {commentId}=req.params
-        const result= await CommentService.modaretComment(commentId as string,req.body)
+       try{
+         const result= await CommentService.modaretComment(commentId as string,req.body)
         res.status(201).json({
             message: "sucess",
-            data: result
+            data: result 
            })
+       }
+       catch (e) {
+        const errorMessage = (e instanceof Error) ? e.message : "Comment update failed!"
+        res.status(400).json({
+            error: errorMessage,
+            details: e
+        })
+    }    
 }
 
 

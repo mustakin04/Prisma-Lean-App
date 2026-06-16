@@ -139,4 +139,18 @@ const getSingleData = async (payload: { postId: string }) => {
     return esixtinid;
   });
 };
+
+const getMypost=async(authorId:string)=>{
+     await prisma.post.findUniqueOrThrow({
+      where:{
+        id: authorId
+      }
+     })
+     const result=await prisma.post.findMany({
+      where:{
+        id: authorId
+      }
+     })
+     return  result ; 
+}
 export const createService = { createPost, getAllPost, getSingleData };
