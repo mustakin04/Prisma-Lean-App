@@ -66,7 +66,7 @@ const deleteComment=async(id:string,authorId:string)=>
       
 }
 
-const modaretComment= async( commentId:string , data:{ status:CommentStatus})=>{
+const modaretComment= async( commentId:string, data:{ status:CommentStatus})=>{
        console.log(commentId,data,"modaretComment")
        const commentData= await prisma.comment.findUniqueOrThrow({
         where:{

@@ -1,6 +1,8 @@
-import { CommentStatus, type Post } from "../../../generated/prisma/client";
+import { get } from "node:http";
+import { CommentStatus, PostStatus, type Post } from "../../../generated/prisma/client";
 import type { PostWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
+
 
 const createPost = async (
   data: Omit<Post, "id" | "updatedAt" | "createdAt">,
@@ -141,16 +143,91 @@ const getSingleData = async (payload: { postId: string }) => {
 };
 
 const getMypost=async(authorId:string)=>{
-     await prisma.post.findUniqueOrThrow({
+
+     await prisma.user.findUniqueOrThrow({
       where:{
-        id: authorId
+         id: authorId,
+         status: "ACTIVE"
       }
+     })
+     await prisma.user.findUniqueOrThrow({
+      where: {
+            id: authorId,
+          
+        },
+        select: {
+            id: true
+        }
      })
      const result=await prisma.post.findMany({
       where:{
-        id: authorId
+         authorId
       }
      })
      return  result ; 
 }
-export const createService = { createPost, getAllPost, getSingleData };
+
+const postUpdate=async( postId:string, data:Partial<Post>,authorId:string,isAdmin:boolean)=>{
+  console.log(postId,data,authorId)
+     const postData=await prisma.post.findUniqueOrThrow({
+      where:{
+        id:postId
+      },
+      select:{
+        id:true,
+        authorId:true
+      }
+    })
+    if(!isAdmin &&(postData.authorId!== authorId)){
+           throw new Error("You are not the owner/creator of the post!")
+    }
+    if(!isAdmin){
+      delete data.isFeatured
+    }
+    const result= await prisma.post.update({
+      where:{
+        id:postData.id
+      },
+      data
+    })
+    return result;
+}
+
+const deletePost=async(authorId:string,deleteId :string,isAdmin:boolean)=>{
+          console.log(authorId,deleteId,isAdmin,"ik")
+        const deleteData= await prisma.post.findUniqueOrThrow({
+          where:{
+            id:deleteId
+          },
+          select:{
+            id:true,
+            authorId:true
+          }
+        })
+        if(!isAdmin&&(deleteData.authorId!==authorId)){
+           throw new Error("You are not the owner/creator of the post!")
+        }
+        const result=await prisma.post.delete({
+          where:{
+            id:deleteId
+          }
+        })
+        return result
+}
+
+const  getStatus=async()=>{
+   return await prisma.$transaction(async(tx)=>{
+       const[totalPost,PublishedPost,Publishdraf,totalComment]=
+       await Promise.all([
+        await tx.post.count(),
+        await tx.post.count({where:{status:PostStatus.PUBLISHED}}),
+        await tx.post.count({where:{status:PostStatus.DRAFT}}),
+        await tx.comment.count()
+       ])
+       return {
+        totalPost,PublishedPost,Publishdraf,totalComment
+       }
+   })
+}
+export const createService = { createPost, getAllPost, getSingleData ,getMypost, postUpdate
+   ,deletePost , getStatus}; 

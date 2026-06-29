@@ -4,6 +4,7 @@ import cors from "cors"
 import { auth } from "./lib/auth";
 import { toNodeHandler } from "better-auth/node";
 import {commetRouter} from "./modules/comment/comment.router"
+import errorHandler from "./middlewares/globalErrorHandandler";
 const app :Application=express()
 
 app.use(cors({
@@ -17,4 +18,5 @@ app.get("/",(req,res)=>{
 })
 app.use("/posts",postRouter)
 app.use("/comments",commetRouter)
+app.use(errorHandler)
 export default app
